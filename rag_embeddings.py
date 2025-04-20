@@ -1,13 +1,13 @@
 import os
 import sys
-from langchain_community.vectorstores import FAISS  # Changed from Chroma to FAISS
+from langchain_community.vectorstores import FAISS  
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 
-# Configuration
+
 PSYCH_CONTENT_DIR = "rag_database/"
-FAISS_DB_DIR = "rag_database/faiss_index"  # Changed from Chroma DB path
+FAISS_DB_DIR = "rag_database/faiss_index"  
 
 def initialize_vector_db():
     """Initialize or create the local vector database of psychological content using FAISS"""
@@ -17,7 +17,7 @@ def initialize_vector_db():
         os.makedirs(PSYCH_CONTENT_DIR)
         print("Created content directory.")
     
-    # Load PDF documents
+    # Load PDF documents (create a directory and add as many PDF files for your toolkit of agent leveraging RAG method.
     print("Loading PDF documents...")
     loader = DirectoryLoader(PSYCH_CONTENT_DIR, glob="**/*.pdf", loader_cls=PyPDFLoader)
     documents = loader.load()
@@ -59,7 +59,6 @@ if __name__ == "__main__":
     print(f"Source directory: {PSYCH_CONTENT_DIR}")
     print(f"Target FAISS database directory: {FAISS_DB_DIR}")
     
-    # Initialize embeddings and store in FAISS
     vector_db = initialize_vector_db()
     
     if vector_db:
