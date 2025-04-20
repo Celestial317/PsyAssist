@@ -19,7 +19,7 @@
   Built with HTML/CSS/JS for a seamless and calming user experience.
 
 ## 📁 Project Structure
-
+```
 ├── index.html # Main chatbot UI
 ├── help_fnq.html # Help / FAQ page
 ├── style.css # Frontend styling
@@ -28,6 +28,7 @@
 ├── rag_embeddings.py # Embeds PDFs into vector database
 ├── resources/ # Miscellaneous assets and helper files
 └── rag_database/ # (You create this) Folder to store mental health PDFs
+```
 
 ![image](https://github.com/user-attachments/assets/9daf659a-4629-4bfe-81d4-53984ccd9d3e)
 
