@@ -4,7 +4,7 @@ import json
 import time
 import google.generativeai as genai
 from flask import Flask, request, jsonify, send_from_directory
-from langchain_community.vectorstores import FAISS  # Changed from Chroma to FAISS
+from langchain_community.vectorstores import FAISS 
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import uuid
 from datetime import datetime
