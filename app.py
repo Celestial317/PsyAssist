@@ -13,16 +13,12 @@ from datetime import datetime
 app = Flask(__name__, static_folder='.')
 
 # Configuration
-genai.configure(api_key="AIzaSyCywgtxEx4QzNLPOk7w7czbAlMqwuNqQCo")
+genai.configure(api_key=" ")  #Add your API Key
 PSYCH_CONTENT_DIR = "rag_database/"
-FAISS_DB_DIR = "rag_database/faiss_index"  # Changed from Chroma DB path
+FAISS_DB_DIR = "rag_database/faiss_index"
 CHAT_HISTORY_DIR = "chat_history/"
 
-# Add after configuration section, replacing "Rest of imports and configuration remains the same..."
-
-# Initialize Google Generative AI models
 try:
-    # Configure the models - A larger model for chat and smaller for sentiment analysis
     chat_model = genai.GenerativeModel('gemini-2.0-flash')
     sentiment_model = genai.GenerativeModel('gemini-2.0-flash')
     
@@ -62,7 +58,6 @@ except Exception as e:
     print(f"Error initializing AI models: {str(e)}")
     print("The application will have limited functionality")
 
-# Rest of imports and configuration remains the same...
 
 # Load the vector database
 def load_vector_db():
@@ -85,7 +80,6 @@ def load_vector_db():
 # Initialize the vector database
 vector_db = load_vector_db()
 
-# The retrieve_psychological_context function needs minor changes
 def retrieve_psychological_context(query):
     """Retrieve relevant psychological context from the vector database"""
     if not vector_db:
@@ -133,7 +127,7 @@ def check_crisis(text, sentiment):
     # Check for crisis keywords
     return any(re.search(pattern, text.lower()) for pattern in CRISIS_TRIGGERS)
 
-# Chat history stored by session ID (in-memory)
+# Chat history stored by session ID (in-memory) this helps chatbot to keep contexts
 chat_sessions = {}
 
 # Persistent chat history management
@@ -185,7 +179,6 @@ def load_recent_sessions(limit=2):
     if not files:
         return []
     
-    # Sort by modification time (newest first)
     files.sort(key=os.path.getmtime, reverse=True)
     recent_files = files[:limit]
     
@@ -202,7 +195,6 @@ def load_recent_sessions(limit=2):
 
 def get_chat_context(session_id, current_message):
     """Get context from current and past chat sessions for the model"""
-    # Get current session context
     session_history = chat_sessions.get(session_id, [])
     current_context = "\n".join([
         f"{'User' if msg['role'] == 'user' else 'Assistant'}: {msg['content']}"
@@ -297,8 +289,8 @@ def chat():
         data = request.json
         user_input = data.get('message', '')
         session_id = data.get('session_id', str(uuid.uuid4()))
-        end_chat = data.get('end_chat', False)  # New parameter to indicate end of chat
-        tone = data.get('tone', 'friendly')  # Get tone parameter, default to friendly
+        end_chat = data.get('end_chat', False)  
+        tone = data.get('tone', 'friendly')  
         
         # Initialize session if it doesn't exist
         if session_id not in chat_sessions:
@@ -323,7 +315,6 @@ def chat():
             
             Would you like me to suggest some coping strategies that might help right now?"""
             
-            # Add assistant response to history
             chat_sessions[session_id].append({"role": "assistant", "content": crisis_response})
             
             return jsonify({
@@ -334,7 +325,7 @@ def chat():
         else:
             response = generate_response(user_input, sentiment, session_id, tone)
             
-            # Add assistant response to history
+
             chat_sessions[session_id].append({"role": "assistant", "content": response})
             
             # Prune history if too long
@@ -379,9 +370,9 @@ def new_chat():
 
 @app.route('/chat-history', methods=['GET'])
 def get_chat_history():
-    sessions = load_recent_sessions(5)  # Get 5 most recent for the UI
+    sessions = load_recent_sessions(5) 
     
-    # Format the sessions for display
+    # Formating the sessions for display
     history = []
     for session in sessions:
         history.append({
@@ -402,7 +393,6 @@ def index():
     """Serve the main application page"""
     return send_from_directory('.', 'index.html')
 
-# Also add a route to handle other static files
 @app.route('/<path:filename>')
 def serve_static(filename):
     """Serve static files like CSS, JS and images"""
