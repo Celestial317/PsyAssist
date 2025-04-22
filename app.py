@@ -2,10 +2,13 @@ import os
 import re
 import json
 import time
+import uuid
+from datetime import datetime
 import google.generativeai as genai
 from flask import Flask, request, jsonify, send_from_directory
 from langchain_community.vectorstores import FAISS 
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings  
+
 import uuid
 from datetime import datetime
 
