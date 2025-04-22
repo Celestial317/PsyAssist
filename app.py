@@ -13,7 +13,8 @@ from datetime import datetime
 app = Flask(__name__, static_folder='.')
 
 # Configuration
-genai.configure(api_key=" ")  #Add your API Key
+api_key = os.getenv("API_KEY")
+genai.configure(api_key= api_key)  #Add your API Key
 PSYCH_CONTENT_DIR = "rag_database/"
 FAISS_DB_DIR = "rag_database/faiss_index"
 CHAT_HISTORY_DIR = "chat_history/"
