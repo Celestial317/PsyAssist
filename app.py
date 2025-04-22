@@ -84,6 +84,10 @@ def load_vector_db():
 # Initialize the vector database
 vector_db = load_vector_db()
 
+if not os.path.exists(CHAT_HISTORY_DIR):
+    os.makedirs(CHAT_HISTORY_DIR)
+   
+
 def retrieve_psychological_context(query):
     """Retrieve relevant psychological context from the vector database"""
     if not vector_db:
