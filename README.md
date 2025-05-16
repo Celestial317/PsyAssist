@@ -91,6 +91,7 @@ You're welcome to contribute by improving features, UI, or expanding the knowled
 ## Author
 
 **Soumya Sourav Das**
+
 [Portfolio](https://soumya-sourav-portfolio.vercel.app/) | [GitHub](https://github.com/Celestial317) | [LinkedIn](https://www.linkedin.com/in/soumyasouravdas/)
 
 ---
