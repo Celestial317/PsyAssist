@@ -2,27 +2,35 @@
 
 # PsyAssist: Multimodal RAG-Based Mental Health Chatbot
 
-**PsyAssist** is a conversational AI application that offers empathetic mental health support through **Retrieval-Augmented Generation (RAG)** and **tonality-aware response modeling**. Developed using Flask, it provides a clean and responsive web interface to facilitate thoughtful, human-like interactions grounded in credible mental health resources.
+**PsyAssist** is an intelligent, context-aware mental health chatbot that leverages **Retrieval-Augmented Generation (RAG)** and **tonality-aware dialogue** to offer personalized, empathetic support. Built using Flask, it features a smooth and accessible web interface backed by a custom mental health knowledge base in PDF format.
 
 ---
 
-## Key Features
+## Features
 
-### Retrieval-Augmented Generation (RAG)
+### 1. Retrieval-Augmented Generation (RAG)
 
-Utilizes a custom RAG pipeline to retrieve contextually relevant content from mental health PDFs. These documents are embedded into a vector store, allowing the chatbot to deliver fact-based, contextual responses.
+Uses a vector database of mental health documents to retrieve contextually relevant answers tailored to user questions.
 
-### Tonality-Aware Interaction
+### 2. Tonality-Aware Conversations
 
-Adapts the tone of responses based on the detected emotional intent of the user input, enhancing sensitivity and conversational relevance.
+Dynamically adjusts responses based on the emotional tone detected in user input, enhancing empathy and relevance.
 
-### Multimodal Design
+### 3. Multimodal Framework
 
-Engineered for multi-format input (extensible to future speech or visual modes), supporting diverse interaction needs beyond simple text.
+Engineered to support diverse inputs (text and easily extendable to voice/image) for a richer conversational experience.
 
-### Intuitive User Interface
+### 4. Clean Web Interface
 
-Built with HTML, CSS, and JavaScript to ensure a minimalistic, focused, and distraction-free user experience.
+Built using HTML/CSS/JS to provide a seamless and user-friendly environment focused on wellness and support.
+
+---
+
+## Interface Snapshots
+
+| Chat Interface                                                                              | Help/FAQ Page                                                                                 |
+| ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| ![Chat UI](https://github.com/user-attachments/assets/157f68a4-62d1-41b6-87a7-822da9ca9fd9) | ![Help Page](https://github.com/user-attachments/assets/9daf659a-4629-4bfe-81d4-53984ccd9d3e) |
 
 ---
 
@@ -30,13 +38,13 @@ Built with HTML, CSS, and JavaScript to ensure a minimalistic, focused, and dist
 
 ```
 ├── index.html          # Main chatbot interface
-├── help_fnq.html       # Help and FAQ page
+├── help_fnq.html       # Help / FAQ page
 ├── style.css           # Frontend styling
-├── script.js           # Client-side JavaScript
-├── app.py              # Flask backend (routing and logic)
-├── rag_embeddings.py   # Embeds PDFs into a vector database
-├── resources/          # Supporting files and assets
-└── rag_database/       # Folder to store uploaded mental health PDFs
+├── script.js           # Client-side interactivity
+├── app.py              # Flask backend logic
+├── rag_embeddings.py   # PDF embedding and vector store
+├── resources/          # Static assets
+└── rag_database/       # (Create this) Add mental health PDFs here
 ```
 
 ---
@@ -54,29 +62,29 @@ pip install -r requirements.txt
 
 ### 2. Configure API Keys
 
-Add your necessary API keys inside a `.env` file or configure them in the relevant Python scripts.
+Add any necessary API keys (e.g., for embedding models) in your environment or directly in the embedding script.
 
-### 3. Add Knowledge Base
+### 3. Prepare Knowledge Base
 
-Place relevant mental health PDF documents into the `rag_database/` directory. These will be embedded for retrieval.
+Place relevant mental health PDF documents in the `rag_database/` directory. These documents will be processed into vector embeddings for retrieval.
 
-### 4. Run the Application
+### 4. Launch the Application
 
 ```bash
 python app.py
 ```
 
-Open your browser and visit `http://localhost:5000` to start interacting with the chatbot.
+Visit `http://localhost:5000` in your browser to start chatting.
 
 ---
 
 ## Contributing
 
-Pull requests are welcome. If you have suggestions, bug fixes, or new features in mind:
+You're welcome to contribute by improving features, UI, or expanding the knowledge base:
 
 * Fork the repository
-* Make your changes
-* Submit a pull request for review
+* Create a feature branch
+* Submit a pull request with a clear explanation
 
 ---
 
