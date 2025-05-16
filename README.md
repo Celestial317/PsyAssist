@@ -2,7 +2,7 @@
 
 # PsyAssist: Multimodal RAG-Based Mental Health Chatbot
 
-**PsyAssist** is an intelligent, context-aware mental health chatbot that leverages **Retrieval-Augmented Generation (RAG)** and **tonality-aware dialogue** to offer personalized, empathetic support. Built using Flask, it features a smooth and accessible web interface backed by a custom mental health knowledge base in PDF format.
+It is an intelligent, context-aware mental health chatbot that leverages **Retrieval-Augmented Generation (RAG)** and **tonality-aware dialogue** to offer personalized, empathetic support. Built using Flask, it features a smooth and accessible web interface backed by a custom mental health knowledge base in PDF format.
 
 ---
 
