@@ -6,6 +6,6 @@ faiss-cpu
 uuid
 sentence-transformers
 langchain-huggingface
-guincorn
+gunicorn
 langchain
 
