@@ -23,8 +23,8 @@ FAISS_DB_DIR = "rag_database/faiss_index"
 CHAT_HISTORY_DIR = "chat_history/"
 
 try:
-    chat_model = genai.GenerativeModel('gemini-2.0-flash')
-    sentiment_model = genai.GenerativeModel('gemini-2.0-flash')
+    chat_model = genai.GenerativeModel('gemini-2.5-flash')
+    sentiment_model = genai.GenerativeModel('gemini-2.5-flash')
     
     # Safety settings for the API
     SAFETY_SETTINGS = [
