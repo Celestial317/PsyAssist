@@ -405,15 +405,3 @@ def index():
 def serve_static(filename):
     """Serve static files like CSS, JS and images"""
     return send_from_directory('.', filename)
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Render provides PORT environment variable
-    print(f"Starting PsyAssist on http://0.0.0.0:{port}/")
-    
-    if not vector_db:
-        print("\nWARNING: Vector database not loaded!")
-        print("RAG functionality will be limited.")
-        print("Please run rag_embeddings.py to create the database first.\n")
-    
-    app.run(host='0.0.0.0', port=port, debug=False)
-
