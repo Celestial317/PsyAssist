@@ -127,13 +127,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('beforeunload', function() {
         if (sessionId) {
-            const payload = JSON.stringify({
+            const payload = {
                 message: "_session_end_",
                 session_id: sessionId,
                 end_chat: true
-            });
-            // Use sendBeacon for reliability when the page is closing
-            navigator.sendBeacon(`${BACKEND_URL}/api/chat`, payload);
+            };
+            // CORRECTED: Using a Blob with sendBeacon is more robust
+            const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+            navigator.sendBeacon(`${BACKEND_URL}/api/chat`, blob);
         }
     });
     
