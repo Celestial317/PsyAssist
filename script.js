@@ -1,7 +1,10 @@
 // Global variables
 let sessionId = null;
 let currentTone = "friendly";
-let shouldSaveSession = true;
+
+// --- IMPORTANT ---
+// This is the full URL of your backend on Hugging Face Spaces.
+const BACKEND_URL = "https://celestialssd-psyassist.hf.space";
 
 document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
@@ -9,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const sendButton = document.getElementById('send-btn');
     const crisisResources = document.getElementById('crisis-resources');
     
-    // Mobile sidebar toggle
     const menuToggle = document.querySelector('.menu-toggle');
     const sidebar = document.querySelector('.sidebar');
     
@@ -17,17 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.toggle('active');
     });
     
-    // Close sidebar when clicking outside on mobile
     document.addEventListener('click', function(e) {
-        if (window.innerWidth <= 768 && 
-            !sidebar.contains(e.target) && 
-            !menuToggle.contains(e.target) &&
-            sidebar.classList.contains('active')) {
+        if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !menuToggle.contains(e.target) && sidebar.classList.contains('active')) {
             sidebar.classList.remove('active');
         }
     });
     
-    // Function to add a message to the chat
     function addMessage(message, isUser) {
         const messageDiv = document.createElement('div');
         messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
@@ -46,20 +43,16 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
     
-    // Function to send message to server
     async function sendMessage() {
         const message = userInput.value.trim();
         if (message === '') return;
         
-        // Add user message to chat
         addMessage(message, true);
-        
-        // Clear input
         userInput.value = '';
         
         try {
-            // Send message to server with session ID and tone
-            const response = await fetch('/chat', {
+            // Use the full backend URL and the correct /api/chat endpoint
+            const response = await fetch(`${BACKEND_URL}/api/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,21 +60,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ 
                     message: message,
                     session_id: sessionId,
-                    tone: currentTone // Include the tone parameter
+                    tone: currentTone
                 }),
             });
             
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
             const data = await response.json();
             
-            // Update session ID if provided
             if (data.session_id) {
                 sessionId = data.session_id;
             }
             
-            // Display bot response
             addMessage(data.response, false);
             
-            // Show crisis resources if crisis detected
             if (data.crisis) {
                 crisisResources.style.display = 'block';
             }
@@ -91,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Event listeners
     sendButton.addEventListener('click', sendMessage);
     
     userInput.addEventListener('keypress', function(e) {
@@ -101,67 +94,56 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // NEW CHAT button functionality
     document.querySelector('.btn').addEventListener('click', function() {
-        // Clear chat messages except the first welcome message
         while (chatMessages.children.length > 1) {
             chatMessages.removeChild(chatMessages.lastChild);
         }
-        // Hide crisis resources
         if (crisisResources) {
             crisisResources.style.display = 'none';
         }
-        
-        // Send current session ID to be saved before creating a new one
         startNewSession(sessionId);
     });
     
-    // Add tone setting functionality
     const toneLinks = document.querySelectorAll('.dropdown-content a');
     toneLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            // Check if this is a tone selection link (parent's button contains "Tone")
-            const parentButton = link.parentElement.previousElementSibling;
+            const parentButton = link.closest('.dropdown')?.querySelector('.dropbtn');
             if (!parentButton || !parentButton.textContent.includes('Tone')) {
-                return; // Skip if not a tone link
+                return;
             }
             
             const tone = this.textContent.toLowerCase();
-            currentTone = tone; // Set the current tone
+            currentTone = tone;
             
-            // Update button text to show selected tone
-            parentButton.innerHTML = `<i class="fas fa-sliders-h"></i> ${this.textContent}`;
+            parentButton.innerHTML = `<i class="fas fa-sliders-h"></i> Tone: ${this.textContent}`;
             
-            // Provide user feedback
             addMessage(`I'll adjust my tone to be more ${tone} now.`, false);
             console.log("Tone set to:", currentTone);
         });
     });
     
-    // Load chat history
     loadChatHistory();
     
-    // When user navigates away, save the session
     window.addEventListener('beforeunload', function() {
-        if (sessionId && shouldSaveSession) {
-            navigator.sendBeacon('/chat', JSON.stringify({
+        if (sessionId) {
+            const payload = JSON.stringify({
                 message: "_session_end_",
                 session_id: sessionId,
-                tone: currentTone, // Include the tone parameter
                 end_chat: true
-            }));
+            });
+            // Use sendBeacon for reliability when the page is closing
+            navigator.sendBeacon(`${BACKEND_URL}/api/chat`, payload);
         }
     });
     
-    // Start a session when the page loads
     startNewSession();
 });
 
-// Function to start a new chat session
 async function startNewSession(oldSessionId = null) {
     try {
-        const response = await fetch('/new-chat', {
+        // Use the full backend URL and the correct /api/new-chat endpoint
+        const response = await fetch(`${BACKEND_URL}/api/new-chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -178,35 +160,27 @@ async function startNewSession(oldSessionId = null) {
     }
 }
 
-// Add a function to load chat history
 async function loadChatHistory() {
     try {
-        const response = await fetch('/chat-history');
+        // Use the full backend URL and the correct /api/chat-history endpoint
+        const response = await fetch(`${BACKEND_URL}/api/chat-history`);
         const data = await response.json();
         
-        // Clear existing history items
-        const historyDropdown = document.querySelector('.dropdown-content');
+        const historyDropdown = document.querySelector('.sidebar .dropdown:nth-child(2) .dropdown-content');
         
         if (!historyDropdown) return;
         
-        // Remove all but the "View All History" option
-        while (historyDropdown.children.length > 1) {
-            historyDropdown.removeChild(historyDropdown.firstChild);
-        }
+        // Clear existing history items
+        const existingLinks = historyDropdown.querySelectorAll('a:not(:last-child)');
+        existingLinks.forEach(link => link.remove());
         
-        // Add history items
         data.history.forEach(session => {
-            const date = new Date(session.timestamp.replace('_', 'T').replace(/_/g, ':')).toLocaleString();
+            const date = new Date(session.timestamp.replace(/(\d{8})_(\d{6})/, '$1T$2')).toLocaleString();
             const historyItem = document.createElement('a');
             historyItem.href = '#';
             historyItem.textContent = `${session.summary} (${date})`;
             
-            // Insert at the beginning
-            if (historyDropdown.firstChild) {
-                historyDropdown.insertBefore(historyItem, historyDropdown.firstChild);
-            } else {
-                historyDropdown.appendChild(historyItem);
-            }
+            historyDropdown.insertBefore(historyItem, historyDropdown.lastElementChild);
         });
     } catch (error) {
         console.error("Error loading chat history:", error);
