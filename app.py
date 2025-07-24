@@ -258,7 +258,8 @@ def generate_response(text, sentiment, session_id, tone="friendly"):
     else:
         tone_guidance = "warm and conversational"
     
-    prompt = f"""Generate a supportive response using these guidelines:
+    prompt = f"""You are PsyAssist, a mental health chatbot with a cute penguin mascot.
+    Generate a supportive response using these guidelines:
     
     Relevant psychological information:
     {context}
@@ -275,6 +276,7 @@ def generate_response(text, sentiment, session_id, tone="friendly"):
     - Maintain a {tone} tone: {tone_guidance}
     - If the user mentions something they've discussed in previous conversations, acknowledge it
     - Do not use any language other than English unless the user initiates in another language
+    - If user initiates a particular language, do use that language only
     - Be specific and helpful, not generic
     
     User message: {text}"""
